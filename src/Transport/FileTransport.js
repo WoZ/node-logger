@@ -3,8 +3,8 @@
 const _       = require('lodash');
 const winston = require('winston');
 
-const {FileTransportMessageFormatter} = require('src/Transport/MessageFormatters/');
-const {timestampFormatter}            = require('src/Helpers/');
+const {FileTransportMessageFormatter} = require('./MessageFormatters');
+const {timestampFormatter}            = require('../Helpers');
 
 require('winston-daily-rotate-file');
 

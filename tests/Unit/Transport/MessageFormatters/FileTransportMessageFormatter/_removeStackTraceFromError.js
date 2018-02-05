@@ -3,7 +3,7 @@
 const _        = require('lodash');
 const {assert} = require('chai');
 
-const {FileTransportMessageFormatter} = require('src/Transport/MessageFormatters');
+const {FileTransportMessageFormatter} = require('../../../../../src/Transport/MessageFormatters');
 
 describe('src/Transport/MessageFormatters/FileTransportMessageFormatter::_removeStackTraceFromError', () => {
     const originalError = new Error('some error message text');

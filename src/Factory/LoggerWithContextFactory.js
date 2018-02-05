@@ -1,6 +1,6 @@
 'use strict';
 
-const LoggerWithContext = require('src/Logger/LoggerWithContext');
+const LoggerWithContext = require('../Logger/LoggerWithContext');
 
 class LoggerWithContextFactory {
 

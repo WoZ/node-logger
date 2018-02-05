@@ -4,7 +4,7 @@ const _       = require('lodash');
 const clone   = require('clone');
 const winston = require('winston');
 
-const RavenFactory = require('src/Factory/RavenFactory');
+const RavenFactory = require('../Factory/RavenFactory');
 
 class RavenTransport extends winston.Transport {
     /**

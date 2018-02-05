@@ -2,8 +2,8 @@
 
 const {assert} = require('chai');
 
-const {ExtendableError}                  = require('tests/Helpers/');
-const {ConsoleTransportMessageFormatter} = require('src/Transport/MessageFormatters');
+const {ExtendableError}                  = require('../../../../Helpers');
+const {ConsoleTransportMessageFormatter} = require('../../../../../src/Transport/MessageFormatters');
 
 describe('src/Transport/ConsoleTransportMessageFormatter::_formatter', () => {
     const _options = {

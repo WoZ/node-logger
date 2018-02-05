@@ -5,7 +5,7 @@ const cycle    = require('cycle');
 const {assert} = require('chai');
 const sinon    = require('sinon');
 
-const {FileTransportMessageFormatter} = require('src/Transport/MessageFormatters');
+const {FileTransportMessageFormatter} = require('../../../../../src/Transport/MessageFormatters');
 
 describe('src/Transport/MessageFormatters/FileTransportMessageFormatter::_adjustMeta', () => {
     const error = new Error('test case');

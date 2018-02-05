@@ -6,7 +6,7 @@ const {
     RavenTransport,
     ConsoleTransport,
     FileTransport
-} = require('src/Transport/');
+} = require('../Transport');
 
 class LoggerFactory {
     /**

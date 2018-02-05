@@ -3,8 +3,8 @@
 const _       = require('lodash');
 const winston = require('winston');
 
-const {ConsoleTransportMessageFormatter} = require('src/Transport/MessageFormatters/');
-const {timestampFormatter}               = require('src/Helpers');
+const {ConsoleTransportMessageFormatter} = require('./MessageFormatters');
+const {timestampFormatter}               = require('../Helpers');
 
 class ConsoleTransport extends winston.transports.Console {
     /**

@@ -2,8 +2,8 @@
 
 const {assert} = require('chai');
 
-const {ExtendableError}               = require('tests/Helpers/');
-const {FileTransportMessageFormatter} = require('src/Transport/MessageFormatters');
+const {ExtendableError}               = require('../../../../Helpers');
+const {FileTransportMessageFormatter} = require('../../../../../src/Transport/MessageFormatters');
 
 describe('src/Transport/MessageFormatters/FileTransportMessageFormatter::_makePlainErrorObject', () => {
     it('must correct create plain object from Error type object', () => {

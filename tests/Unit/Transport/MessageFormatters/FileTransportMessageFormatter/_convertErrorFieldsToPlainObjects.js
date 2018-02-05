@@ -3,8 +3,8 @@
 const {assert} = require('chai');
 const sinon    = require('sinon');
 
-const {ExtendableError}               = require('tests/Helpers/');
-const {FileTransportMessageFormatter} = require('src/Transport/MessageFormatters');
+const {ExtendableError}               = require('../../../../Helpers');
+const {FileTransportMessageFormatter} = require('../../../../../src/Transport/MessageFormatters');
 
 describe('src/Transport/MessageFormatters/FileTransportMessageFormatter::_convertErrorFieldsToPlainObjects', () => {
     const error = new Error('test case');

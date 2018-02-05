@@ -14,7 +14,6 @@
     "test:coverage": "NODE_ENV=test ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha --print both -- --opts tests/mocha.opts -R spec ./tests"
   },
   "dependencies": {
-    "app-module-path": "2.2.0",
     "clone": "2.1.1",
     "cycle": "1.0.3",
     "lodash": "4.17.4",
