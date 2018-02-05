@@ -1,10 +1,10 @@
 'use strict';
 
-const _ = require('lodash');
-const clone = require('clone');
+const _       = require('lodash');
+const clone   = require('clone');
 const winston = require('winston');
 
-const RavenFactory = require('src/Factories/RavenFactory');
+const RavenFactory = require('src/Factory/RavenFactory');
 
 class RavenTransport extends winston.Transport {
     /**
@@ -40,7 +40,7 @@ class RavenTransport extends winston.Transport {
 
         try {
             metaError = clone(meta);
-        } catch(error) {
+        } catch (error) {
             process.nextTick(() => this.emit('error', error));
 
             return callback ? callback(error) : undefined;
@@ -76,7 +76,7 @@ class RavenTransport extends winston.Transport {
     static getOptions(configOptions) {
         const options = _.cloneDeep(configOptions);
 
-        options.name = 'raven';
+        options.name             = 'raven';
         options.handleExceptions = options.handleExceptions || false;
 
         const raven = new RavenFactory().create(options.sentryDsn);

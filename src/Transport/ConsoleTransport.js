@@ -1,12 +1,10 @@
 'use strict';
 
-const _ = require('lodash');
+const _       = require('lodash');
 const winston = require('winston');
 
 const {ConsoleTransportMessageFormatter} = require('src/Transport/MessageFormatters/');
-const {
-    timestampFormatter,
-} = require('src/Helpers');
+const {timestampFormatter}               = require('src/Helpers');
 
 class ConsoleTransport extends winston.transports.Console {
     /**
@@ -16,7 +14,7 @@ class ConsoleTransport extends winston.transports.Console {
         const options = _.cloneDeep(configOptions);
 
         options.handleExceptions = options.handleExceptions || false;
-        options.debug = options.level || 'debug';
+        options.debug            = options.level || 'debug';
 
         return Object.assign({}, options, {
             timestamp: timestampFormatter(),

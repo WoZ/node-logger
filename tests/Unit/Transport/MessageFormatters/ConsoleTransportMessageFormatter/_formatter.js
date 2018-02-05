@@ -39,6 +39,13 @@ describe('src/Transport/ConsoleTransportMessageFormatter::_formatter', () => {
                 meta:    {error: new ExtendableError('messsage', {error: new Error('original error')})}
             }, _options),
             expectedRegexp: /\[time\]\[ERROR\] message. Meta: { error:\s*{ ExtendableError: messsage/
+        },{
+            description:    'must correct format error with message, meta and stack options',
+            options:        Object.assign({
+                message: 'message',
+                meta:    {foo: 'bar', stack: ['item1', 'item2']}
+            }, _options),
+            expectedRegexp: /\[time\]\[ERROR\] message. Meta: { foo: 'bar' }.\nStack: item1,item2/
         },
     ];
 
