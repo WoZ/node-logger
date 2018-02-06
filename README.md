@@ -2,6 +2,26 @@
 
 Common logger facility for node projects.
 
+# Configuration
+
+All available loggers and configuration options listed below:
+
+```
+"logger": {
+    "console": {
+        "level": "debug"
+    },
+    "file": {
+        "level": "info",
+        "filename": "./var/log/log"
+    },
+    "raven": {
+        "level": "error",
+        "sentryDsn": ""
+    }
+}
+```
+
 # Usage
 
 Module defines three factories:
@@ -10,4 +30,27 @@ Module defines three factories:
 * LoggerWithContextFactory - wrapper around logger, allow to append some context data to all log records
 * ErrorFormatterFactory - helper function, that format errors in generic manner, when logger usage is not possible for some reasons
 
-TODO: add usage and configuration examples
+```js
+'use strict';
+
+const config = require('config');
+const {
+    LoggerFactory,
+    LoggerWithContextFactory,
+    ErrorFormatterFactory
+} = require('logger');
+
+const logger            = new LoggerFactory().create(config.logger);
+const loggerWithContext = new LoggerWithContextFactory().create('context', logger);
+const errorFormatter    = new ErrorFormatterFactory().create();
+
+const error = new Error('error message');
+
+logger.error(error.message, error);
+
+loggerWithContext.error(error.message, error);
+
+console.log(
+    errorFormatter('some type', error)
+);
+```
