@@ -4,7 +4,7 @@ Common logger facility for node projects.
 
 # Configuration
 
-All available loggers and configuration options listed below:
+All available transports and configuration options listed below:
 
 ```
 "logger": {
@@ -18,6 +18,11 @@ All available loggers and configuration options listed below:
     "raven": {
         "level": "error",
         "sentryDsn": ""
+    },
+    "logstash": {
+        "level": "debug",
+        "port": 5044,
+        "host": ""
     }
 }
 ```
