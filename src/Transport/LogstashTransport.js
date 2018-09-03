@@ -9,7 +9,6 @@ const winstonCommon = require('winston/lib/winston/common');
 const {lookup}      = require('lookup-dns-cache');
 
 const {LogstashTransportMessageFormatter} = require('./MessageFormatters');
-const {timestampFormatter}                = require('../Helpers');
 
 class LogstashTransport extends winston.Transport {
     /**
@@ -98,7 +97,7 @@ class LogstashTransport extends winston.Transport {
         options.host      = options.host || (options.udpType === 'udp6' ? '::1' : '127.0.0.1');
         options.port      = options.port || 5044;
         options.udpType   = options.udpType === 'udp6' ? 'udp6' : 'udp4';
-        options.timestamp = timestampFormatter();
+        options.timestamp = () => new Date().toISOString();
         options.formatter = LogstashTransportMessageFormatter.getFormatter();
 
         return options;

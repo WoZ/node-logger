@@ -40,13 +40,12 @@ Module defines three factories:
 
 const config = require('config');
 const {
-    LoggerFactory,
-    LoggerWithContextFactory,
+    Logger,
     ErrorFormatterFactory
 } = require('logger');
 
-const logger            = new LoggerFactory().create(config.logger);
-const loggerWithContext = new LoggerWithContextFactory().create('context', logger);
+const logger            = new Logger(config.logger);
+const loggerWithContext = logger.withContext('context');
 const errorFormatter    = new ErrorFormatterFactory().create();
 
 const error = new Error('error message');

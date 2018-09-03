@@ -4,7 +4,6 @@ const _       = require('lodash');
 const winston = require('winston');
 
 const {FileTransportMessageFormatter} = require('./MessageFormatters');
-const {timestampFormatter}            = require('../Helpers');
 
 require('winston-daily-rotate-file');
 
@@ -26,7 +25,7 @@ class FileTransport extends winston.transports.DailyRotateFile {
         options.level            = options.level || 'debug';
 
         return Object.assign({}, options, {
-            timestamp: timestampFormatter(),
+            timestamp: () => new Date().toISOString(),
             formatter: FileTransportMessageFormatter.getFormatter()
         });
     }

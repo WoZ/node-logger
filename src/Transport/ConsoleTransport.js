@@ -4,7 +4,6 @@ const _       = require('lodash');
 const winston = require('winston');
 
 const {ConsoleTransportMessageFormatter} = require('./MessageFormatters');
-const {timestampFormatter}               = require('../Helpers');
 
 class ConsoleTransport extends winston.transports.Console {
     /**
@@ -17,7 +16,7 @@ class ConsoleTransport extends winston.transports.Console {
         options.debug            = options.level || 'debug';
 
         return Object.assign({}, options, {
-            timestamp: timestampFormatter(),
+            timestamp: () => new Date().toISOString(),
             formatter: ConsoleTransportMessageFormatter.getFormatter(),
         });
     }

@@ -1,11 +1,11 @@
 'use strict';
 
-const LoggerFactory            = require('./src/Factory/LoggerFactory');
-const LoggerWithContextFactory = require('./src/Factory/LoggerWithContextFactory');
-const ErrorFormatterFactory    = require('./src/Factory/ErrorFormatterFactory');
+const Logger                = require('./src/Logger/Logger');
+const LoggerWithContext     = require('./src/Logger/LoggerWithContext');
+const ErrorFormatterFactory = require('./src/Factory/ErrorFormatterFactory');
 
 module.exports = {
-    LoggerFactory,
-    LoggerWithContextFactory,
+    Logger,
+    LoggerWithContext,
     ErrorFormatterFactory
 };
