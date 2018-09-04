@@ -30,6 +30,10 @@ class Logger extends winston.Logger {
         ]);
 
         Object.keys(config).forEach(transportName => {
+            if (config[transportName] === null || config[transportName] === undefined) {
+                return;
+            }
+
             // noinspection JSCheckFunctionSignatures
             const factory = factories.get(transportName);
 
