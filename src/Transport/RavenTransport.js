@@ -3,8 +3,9 @@
 const _       = require('lodash');
 const clone   = require('clone');
 const winston = require('winston');
+const Raven   = require('raven');
 
-const RavenFactory = require('../Factory/RavenFactory');
+Raven.disableConsoleAlerts();
 
 class RavenTransport extends winston.Transport {
     /**
@@ -79,7 +80,7 @@ class RavenTransport extends winston.Transport {
         options.name             = 'raven';
         options.handleExceptions = options.handleExceptions || false;
 
-        const raven = new RavenFactory().create(options.sentryDsn);
+        const raven = new Raven.Client(options.sentryDsn || undefined);
 
         raven.install();
 

@@ -4,7 +4,7 @@ Common logger facility for node projects.
 
 # Configuration
 
-All available loggers and configuration options listed below:
+All available transports and configuration options listed below:
 
 ```
 "logger": {
@@ -18,6 +18,11 @@ All available loggers and configuration options listed below:
     "raven": {
         "level": "error",
         "sentryDsn": ""
+    },
+    "logstash": {
+        "level": "debug",
+        "port": 5044,
+        "host": ""
     }
 }
 ```
@@ -35,13 +40,12 @@ Module defines three factories:
 
 const config = require('config');
 const {
-    LoggerFactory,
-    LoggerWithContextFactory,
+    Logger,
     ErrorFormatterFactory
 } = require('logger');
 
-const logger            = new LoggerFactory().create(config.logger);
-const loggerWithContext = new LoggerWithContextFactory().create('context', logger);
+const logger            = new Logger(config.logger);
+const loggerWithContext = logger.withContext('context');
 const errorFormatter    = new ErrorFormatterFactory().create();
 
 const error = new Error('error message');
