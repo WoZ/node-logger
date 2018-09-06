@@ -1,12 +1,10 @@
 'use strict';
 
-const _             = require('lodash');
-const dgram         = require('dgram');
-const cycle         = require('cycle');
-const clone         = require('clone');
-const winston       = require('winston');
+const _ = require('lodash');
+const dgram = require('dgram');
+const winston = require('winston');
 const winstonCommon = require('winston/lib/winston/common');
-const {lookup}      = require('lookup-dns-cache');
+const {lookup} = require('lookup-dns-cache');
 
 const {LogstashTransportMessageFormatter} = require('./MessageFormatters');
 
@@ -17,7 +15,7 @@ class LogstashTransport extends winston.Transport {
     constructor(options) {
         super(options);
 
-        this._options    = options;
+        this._options = options;
         this._connection = this._createConnection();
     }
 
@@ -28,13 +26,11 @@ class LogstashTransport extends winston.Transport {
      * @param {function} callback
      */
     log(level, message, meta, callback = () => {}) {
-        meta = meta ? cycle.decycle(clone(meta)) : {};
-
         if (this.silent) {
             return callback(null, true);
         }
 
-        const logEntry = winstonCommon.log({
+        const logEntry = this._formatMessage({
             level: level,
             message: message,
             meta: meta,
@@ -52,6 +48,34 @@ class LogstashTransport extends winston.Transport {
             this.emit('logged');
 
             callback(null, true);
+        });
+    }
+
+    /**
+     * @param {Object} options
+     * @param {string} options.level
+     * @param {string} options.message
+     * @param {*} [options.meta]
+     * @param {function} options.timestamp
+     * @param {function} options.formatter
+     * returns {string}
+     * @private
+     */
+    _formatMessage(options) {
+        const output = winstonCommon.log(options);
+
+        const logstashOutput = {
+            '@message': output,
+            '@timestamp': this._options.timestamp(),
+            '@fields': {
+                level: options.level
+            }
+        };
+
+        return JSON.stringify(logstashOutput, function (key, value) {
+            return value instanceof Buffer
+                ? value.toString('base64')
+                : value;
         });
     }
 
@@ -78,13 +102,14 @@ class LogstashTransport extends winston.Transport {
      */
     _sendLog(message, callback) {
         const messageBuffer = new Buffer(message);
-        const offset        = 0;
-        const length        = messageBuffer.length;
-        const host          = this._options.host;
-        const port          = this._options.port;
+        const offset = 0;
+        const length = messageBuffer.length;
+        const host = this._options.host;
+        const port = this._options.port;
 
         this._connection.send(messageBuffer, offset, length, port, host, callback);
     }
+
 
     /**
      * @param {Object} configOptions
@@ -92,11 +117,11 @@ class LogstashTransport extends winston.Transport {
     static getOptions(configOptions) {
         const options = _.cloneDeep(configOptions);
 
-        options.name      = 'logstash';
-        options.level     = options.level || 'debug';
-        options.host      = options.host || (options.udpType === 'udp6' ? '::1' : '127.0.0.1');
-        options.port      = options.port || 5044;
-        options.udpType   = options.udpType === 'udp6' ? 'udp6' : 'udp4';
+        options.name = 'logstash';
+        options.level = options.level || 'debug';
+        options.host = options.host || (options.udpType === 'udp6' ? '::1' : '127.0.0.1');
+        options.port = options.port || 5044;
+        options.udpType = options.udpType === 'udp6' ? 'udp6' : 'udp4';
         options.timestamp = () => new Date().toISOString();
         options.formatter = LogstashTransportMessageFormatter.getFormatter();
 
