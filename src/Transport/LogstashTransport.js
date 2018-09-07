@@ -1,10 +1,10 @@
 'use strict';
 
-const _ = require('lodash');
-const dgram = require('dgram');
-const winston = require('winston');
+const _             = require('lodash');
+const dgram         = require('dgram');
+const winston       = require('winston');
 const winstonCommon = require('winston/lib/winston/common');
-const {lookup} = require('lookup-dns-cache');
+const {lookup}      = require('lookup-dns-cache');
 
 const {LogstashTransportMessageFormatter} = require('./MessageFormatters');
 
@@ -15,7 +15,7 @@ class LogstashTransport extends winston.Transport {
     constructor(options) {
         super(options);
 
-        this._options = options;
+        this._options    = options;
         this._connection = this._createConnection();
     }
 
@@ -58,7 +58,7 @@ class LogstashTransport extends winston.Transport {
      * @param {*} [options.meta]
      * @param {function} options.timestamp
      * @param {function} options.formatter
-     * returns {string}
+     * @returns {string}
      * @private
      */
     _formatMessage(options) {
@@ -102,14 +102,13 @@ class LogstashTransport extends winston.Transport {
      */
     _sendLog(message, callback) {
         const messageBuffer = new Buffer(message);
-        const offset = 0;
-        const length = messageBuffer.length;
-        const host = this._options.host;
-        const port = this._options.port;
+        const offset        = 0;
+        const length        = messageBuffer.length;
+        const host          = this._options.host;
+        const port          = this._options.port;
 
         this._connection.send(messageBuffer, offset, length, port, host, callback);
     }
-
 
     /**
      * @param {Object} configOptions
@@ -117,11 +116,11 @@ class LogstashTransport extends winston.Transport {
     static getOptions(configOptions) {
         const options = _.cloneDeep(configOptions);
 
-        options.name = 'logstash';
-        options.level = options.level || 'debug';
-        options.host = options.host || (options.udpType === 'udp6' ? '::1' : '127.0.0.1');
-        options.port = options.port || 5044;
-        options.udpType = options.udpType === 'udp6' ? 'udp6' : 'udp4';
+        options.name      = 'logstash';
+        options.level     = options.level || 'debug';
+        options.host      = options.host || (options.udpType === 'udp6' ? '::1' : '127.0.0.1');
+        options.port      = options.port || 5044;
+        options.udpType   = options.udpType === 'udp6' ? 'udp6' : 'udp4';
         options.timestamp = () => new Date().toISOString();
         options.formatter = LogstashTransportMessageFormatter.getFormatter();
 
