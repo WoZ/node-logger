@@ -2,7 +2,6 @@
 
 const _             = require('lodash');
 const dgram         = require('dgram');
-const cycle         = require('cycle');
 const clone         = require('clone');
 const winston       = require('winston');
 const winstonCommon = require('winston/lib/winston/common');
@@ -28,19 +27,13 @@ class LogstashTransport extends winston.Transport {
      * @param {function} callback
      */
     log(level, message, meta, callback = () => {}) {
-        meta = meta ? cycle.decycle(clone(meta)) : {};
+        meta = meta ? clone(meta) : {};
 
         if (this.silent) {
             return callback(null, true);
         }
 
-        const logEntry = winstonCommon.log({
-            level: level,
-            message: message,
-            meta: meta,
-            timestamp: this._options.timestamp,
-            formatter: this._options.formatter
-        });
+        const logEntry = this._formatMessage(level, message, meta);
 
         this._sendLog(logEntry, error => {
             if (error) {
@@ -53,6 +46,35 @@ class LogstashTransport extends winston.Transport {
 
             callback(null, true);
         });
+    }
+
+    /**
+     * @param {string} level
+     * @param {string} message
+     * @param {*} meta
+     * @returns {string}
+     * @private
+     */
+    _formatMessage(message, level, meta) {
+        const winstonOptions = {
+            message: message,
+            level: level,
+            meta: meta,
+            timestamp: this._options.timestamp,
+            formatter: this._options.formatter
+        };
+
+        const output = winstonCommon.log(winstonOptions);
+
+        const logstashOutput = {
+            '@message': output,
+            '@timestamp': this._options.timestamp(),
+            '@fields': {
+                level: level
+            }
+        };
+
+        return JSON.stringify(logstashOutput);
     }
 
     /**
