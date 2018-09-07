@@ -2,6 +2,7 @@
 
 const _             = require('lodash');
 const dgram         = require('dgram');
+const clone         = require('clone');
 const winston       = require('winston');
 const winstonCommon = require('winston/lib/winston/common');
 const {lookup}      = require('lookup-dns-cache');
@@ -26,17 +27,13 @@ class LogstashTransport extends winston.Transport {
      * @param {function} callback
      */
     log(level, message, meta, callback = () => {}) {
+        meta = meta ? clone(meta) : {};
+
         if (this.silent) {
             return callback(null, true);
         }
 
-        const logEntry = this._formatMessage({
-            level: level,
-            message: message,
-            meta: meta,
-            timestamp: this._options.timestamp,
-            formatter: this._options.formatter
-        });
+        const logEntry = this._formatMessage(level, message, meta);
 
         this._sendLog(logEntry, error => {
             if (error) {
@@ -52,31 +49,32 @@ class LogstashTransport extends winston.Transport {
     }
 
     /**
-     * @param {Object} options
-     * @param {string} options.level
-     * @param {string} options.message
-     * @param {*} [options.meta]
-     * @param {function} options.timestamp
-     * @param {function} options.formatter
+     * @param {string} level
+     * @param {string} message
+     * @param {*} meta
      * @returns {string}
      * @private
      */
-    _formatMessage(options) {
-        const output = winstonCommon.log(options);
+    _formatMessage(message, level, meta) {
+        const winstonOptions = {
+            message: message,
+            level: level,
+            meta: meta,
+            timestamp: this._options.timestamp,
+            formatter: this._options.formatter
+        };
+
+        const output = winstonCommon.log(winstonOptions);
 
         const logstashOutput = {
             '@message': output,
             '@timestamp': this._options.timestamp(),
             '@fields': {
-                level: options.level
+                level: level
             }
         };
 
-        return JSON.stringify(logstashOutput, function (key, value) {
-            return value instanceof Buffer
-                ? value.toString('base64')
-                : value;
-        });
+        return JSON.stringify(logstashOutput);
     }
 
     /**
