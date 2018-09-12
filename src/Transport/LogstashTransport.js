@@ -55,7 +55,7 @@ class LogstashTransport extends winston.Transport {
      * @returns {string}
      * @private
      */
-    _formatMessage(message, level, meta) {
+    _formatMessage(level, message, meta) {
         const winstonOptions = {
             message: message,
             level: level,
@@ -67,11 +67,10 @@ class LogstashTransport extends winston.Transport {
         const output = winstonCommon.log(winstonOptions);
 
         const logstashOutput = {
+            level: level,
+            hostname: this._options.hostname,
             '@message': output,
             '@timestamp': this._options.timestamp(),
-            '@fields': {
-                level: level
-            }
         };
 
         return JSON.stringify(logstashOutput);
@@ -99,7 +98,7 @@ class LogstashTransport extends winston.Transport {
      * @private
      */
     _sendLog(message, callback) {
-        const messageBuffer = new Buffer(message);
+        const messageBuffer = Buffer.from(message);
         const offset        = 0;
         const length        = messageBuffer.length;
         const host          = this._options.host;
@@ -116,6 +115,7 @@ class LogstashTransport extends winston.Transport {
 
         options.name      = 'logstash';
         options.level     = options.level || 'debug';
+        options.hostname  = options.hostname || process.env.HOSTNAME;
         options.host      = options.host || (options.udpType === 'udp6' ? '::1' : '127.0.0.1');
         options.port      = options.port || 5044;
         options.udpType   = options.udpType === 'udp6' ? 'udp6' : 'udp4';
