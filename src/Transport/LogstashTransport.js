@@ -1,6 +1,7 @@
 'use strict';
 
 const _             = require('lodash');
+const os            = require('os');
 const dgram         = require('dgram');
 const clone         = require('clone');
 const winston       = require('winston');
@@ -115,7 +116,7 @@ class LogstashTransport extends winston.Transport {
 
         options.name      = 'logstash';
         options.level     = options.level || 'debug';
-        options.hostname  = options.hostname || process.env.HOSTNAME;
+        options.hostname  = options.hostname || process.env.HOSTNAME || os.hostname();
         options.host      = options.host || (options.udpType === 'udp6' ? '::1' : '127.0.0.1');
         options.port      = options.port || 5044;
         options.udpType   = options.udpType === 'udp6' ? 'udp6' : 'udp4';
