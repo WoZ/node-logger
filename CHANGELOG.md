@@ -2,6 +2,7 @@
 
 ### 2.0.0
 
+ [#21862](https://redmine.hwtool.net/issues/21862) Змінити структуру даних для відправки в logstash
  [#21790](https://redmine.hwtool.net/issues/21790) Добавить поддержку logstash в модуль logger	
  [#21800](https://redmine.hwtool.net/issues/21800) Добавить хелпер для создания логгера с контекстом
 

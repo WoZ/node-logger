@@ -1,8 +1,8 @@
 'use strict';
 
 const _             = require('lodash');
+const os            = require('os');
 const dgram         = require('dgram');
-const cycle         = require('cycle');
 const clone         = require('clone');
 const winston       = require('winston');
 const winstonCommon = require('winston/lib/winston/common');
@@ -28,19 +28,13 @@ class LogstashTransport extends winston.Transport {
      * @param {function} callback
      */
     log(level, message, meta, callback = () => {}) {
-        meta = meta ? cycle.decycle(clone(meta)) : {};
+        meta = meta ? clone(meta) : {};
 
         if (this.silent) {
             return callback(null, true);
         }
 
-        const logEntry = winstonCommon.log({
-            level: level,
-            message: message,
-            meta: meta,
-            timestamp: this._options.timestamp,
-            formatter: this._options.formatter
-        });
+        const logEntry = this._formatMessage(level, message, meta);
 
         this._sendLog(logEntry, error => {
             if (error) {
@@ -53,6 +47,34 @@ class LogstashTransport extends winston.Transport {
 
             callback(null, true);
         });
+    }
+
+    /**
+     * @param {string} level
+     * @param {string} message
+     * @param {*} meta
+     * @returns {string}
+     * @private
+     */
+    _formatMessage(level, message, meta) {
+        const winstonOptions = {
+            message: message,
+            level: level,
+            meta: meta,
+            timestamp: this._options.timestamp,
+            formatter: this._options.formatter
+        };
+
+        const output = winstonCommon.log(winstonOptions);
+
+        const logstashOutput = {
+            level: level,
+            hostname: this._options.hostname,
+            '@message': output,
+            '@timestamp': this._options.timestamp(),
+        };
+
+        return JSON.stringify(logstashOutput);
     }
 
     /**
@@ -77,7 +99,7 @@ class LogstashTransport extends winston.Transport {
      * @private
      */
     _sendLog(message, callback) {
-        const messageBuffer = new Buffer(message);
+        const messageBuffer = Buffer.from(message);
         const offset        = 0;
         const length        = messageBuffer.length;
         const host          = this._options.host;
@@ -94,6 +116,7 @@ class LogstashTransport extends winston.Transport {
 
         options.name      = 'logstash';
         options.level     = options.level || 'debug';
+        options.hostname  = options.hostname || process.env.HOSTNAME || os.hostname();
         options.host      = options.host || (options.udpType === 'udp6' ? '::1' : '127.0.0.1');
         options.port      = options.port || 5044;
         options.udpType   = options.udpType === 'udp6' ? 'udp6' : 'udp4';
