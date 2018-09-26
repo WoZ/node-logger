@@ -3,6 +3,7 @@
 const _             = require('lodash');
 const os            = require('os');
 const dgram         = require('dgram');
+const dns           = require('dns');
 const clone         = require('clone');
 const winston       = require('winston');
 const winstonCommon = require('winston/lib/winston/common');
@@ -84,7 +85,7 @@ class LogstashTransport extends winston.Transport {
     _createConnection() {
         const options = {
             type: this._options.udpType,
-            lookup
+            lookup: this._lookup
         };
 
         return dgram
@@ -106,6 +107,32 @@ class LogstashTransport extends winston.Transport {
         const port          = this._options.port;
 
         this._connection.send(messageBuffer, offset, length, port, host, callback);
+    }
+
+    /**
+     * Custom lookup function for dgram.Socket
+     *
+     * @param {string} hostname
+     * @param {Object} options
+     * @param {Function} callback
+     * @throws {Error}
+     * @returns {{}|undefined}
+     * @private
+     */
+    _lookup(hostname, options, callback) {
+        lookup(hostname, options, (error, result) => {
+            if (error) {
+                // 'lookup-dns-cache' use DNS::resolve method for lookup IP of hostname but
+                // it does not work if hostname is IP address
+                if (error.code === dns.NOTFOUND) {
+                    return dns.lookup(hostname, options, callback);
+                }
+
+                return callback(error, result);
+            }
+
+            return callback(error, result);
+        });
     }
 
     /**
