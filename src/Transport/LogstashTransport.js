@@ -121,14 +121,15 @@ class LogstashTransport extends winston.Transport {
      */
     _lookup(hostname, options, callback) {
         lookup(hostname, options, (error, result) => {
-            if (error) {
-                // 'lookup-dns-cache' use DNS::resolve method for lookup IP of hostname but
-                // it does not work if hostname is IP address
-                if (error.code === dns.NOTFOUND) {
-                    return dns.lookup(hostname, options, callback);
-                }
-
-                return callback(error, result);
+            // Therefore we use additional DNS::lookup() if the lookup of the hostname in DNS records throws error.
+            //
+            // This decision is based on a DNS module implementation considerations
+            // https://nodejs.org/dist/latest-v8.x/docs/api/dns.html#dns_implementation_considerations.
+            // It is caused by an internal implementation of methods dgram.Socket::send() that calls method
+            // dgram.Socket::bind() for listening on address '0.0.0.0' if it wasn't called previously.
+            // For a different OS configuration, this could be a point of failure.
+            if (error && error.code === dns.NOTFOUND) {
+                return dns.lookup(hostname, options, callback);
             }
 
             return callback(error, result);
