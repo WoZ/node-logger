@@ -121,7 +121,7 @@ class LogstashTransport extends winston.Transport {
      */
     _lookup(hostname, options, callback) {
         lookup(hostname, options, (error, result) => {
-            // Therefore we use additional DNS::lookup() if the lookup of the hostname in DNS records throws error.
+            // Therefore we use additional DNS::lookup() if the search of the hostname in DNS records wasn't successful.
             //
             // This decision is based on a DNS module implementation considerations
             // https://nodejs.org/dist/latest-v8.x/docs/api/dns.html#dns_implementation_considerations.
