@@ -3,6 +3,7 @@
 const _             = require('lodash');
 const os            = require('os');
 const dgram         = require('dgram');
+const dns           = require('dns');
 const clone         = require('clone');
 const winston       = require('winston');
 const winstonCommon = require('winston/lib/winston/common');
@@ -84,7 +85,7 @@ class LogstashTransport extends winston.Transport {
     _createConnection() {
         const options = {
             type: this._options.udpType,
-            lookup
+            lookup: this._lookup
         };
 
         return dgram
@@ -106,6 +107,33 @@ class LogstashTransport extends winston.Transport {
         const port          = this._options.port;
 
         this._connection.send(messageBuffer, offset, length, port, host, callback);
+    }
+
+    /**
+     * Custom lookup function for dgram.Socket
+     *
+     * @param {string} hostname
+     * @param {Object} options
+     * @param {Function} callback
+     * @throws {Error}
+     * @returns {{}|undefined}
+     * @private
+     */
+    _lookup(hostname, options, callback) {
+        lookup(hostname, options, (error, result) => {
+            // Therefore we use additional DNS::lookup() if the search of the hostname in DNS records wasn't successful.
+            //
+            // This decision is based on a DNS module implementation considerations
+            // https://nodejs.org/dist/latest-v8.x/docs/api/dns.html#dns_implementation_considerations.
+            // It is caused by an internal implementation of methods dgram.Socket::send() that calls method
+            // dgram.Socket::bind() for listening on address '0.0.0.0' if it wasn't called previously.
+            // For a different OS configuration, this could be a point of failure.
+            if (error && error.code === dns.NOTFOUND) {
+                return dns.lookup(hostname, options, callback);
+            }
+
+            return callback(error, result);
+        });
     }
 
     /**
