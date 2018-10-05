@@ -7,7 +7,7 @@ const dns           = require('dns');
 const clone         = require('clone');
 const winston       = require('winston');
 const winstonCommon = require('winston/lib/winston/common');
-const {lookup}      = require('lookup-dns-cache');
+const {lookup}      = require('dns-lookup-cache');
 
 const {LogstashTransportMessageFormatter} = require('./MessageFormatters');
 
