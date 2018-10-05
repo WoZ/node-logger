@@ -1,5 +1,9 @@
 ## Changelog
 
+### 2.0.1
+
+ [#22075](https://redmine.hwtool.net/issues/22075) Add custom lookup function for Logstash transport
+ 
 ### 2.0.0
 
  [#21862](https://redmine.hwtool.net/issues/21862) Змінити структуру даних для відправки в logstash
