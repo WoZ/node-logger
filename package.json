@@ -16,7 +16,7 @@
   "dependencies": {
     "clone": "2.1.1",
     "cycle": "1.0.3",
-    "dns-lookup-cache": "1.0.2",
+    "dns-lookup-cache": "1.0.3",
     "lodash": "4.17.4",
     "raven": "2.0.2",
     "winston": "2.3.1",
