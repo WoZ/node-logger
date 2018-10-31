@@ -1,5 +1,9 @@
 ## Changelog
 
+### 2.0.1
+
+ [#22508](https://redmine.hwtool.net/issues/22508) Оновити модуль "dns-lookup-cache" до версії 1.0.3
+ 
 ### 2.0.0
 
  [#22075](https://redmine.hwtool.net/issues/22075) Add custom lookup function for Logstash transport
