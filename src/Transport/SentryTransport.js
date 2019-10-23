@@ -67,7 +67,7 @@ class SentryTransport extends winston.Transport {
         options.handleExceptions = options.handleExceptions || false;
 
         options.sentry = Sentry;
-        options.sentry.init({ dsn: options.sentryDsn || undefined });
+        options.sentry.init({ dsn: options.dsn || undefined });
 
         return options;
     }
