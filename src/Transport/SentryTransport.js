@@ -3,19 +3,17 @@
 const _       = require('lodash');
 const clone   = require('clone');
 const winston = require('winston');
-const Raven   = require('raven');
+const Sentry  = require('@sentry/node');
 
-Raven.disableConsoleAlerts();
-
-class RavenTransport extends winston.Transport {
+class SentryTransport extends winston.Transport {
     /**
      * @param {Object} options
-     * @param {Raven.Client} options.raven
+     * @param {Sentry} options.sentry
      */
     constructor(options) {
         super(options);
 
-        this._raven  = options.raven;
+        this._sentry = options.sentry;
         this._levels = new Map([
             ['silly', 'debug'],
             ['verbose', 'debug'],
@@ -37,38 +35,26 @@ class RavenTransport extends winston.Transport {
             return;
         }
 
-        let metaError;
-
         try {
-            metaError = clone(meta);
-        } catch (error) {
-            process.nextTick(() => this.emit('error', error));
+            const metaError = clone(meta);
 
-            return callback ? callback(error) : undefined;
-        }
+            this._sentry.withScope(scope => {
+                scope.setLevel(level);
+                scope.setExtras(metaError.extra || {});
 
-        const ravenMeta = {
-            level: this._levels.get(level)
-        };
-
-        if (metaError.extra) {
-            ravenMeta.extra = metaError.extra;
-            delete metaError.extra;
-        }
-
-        this._raven.captureException(metaError, ravenMeta, (err) => {
-            if (err) {
-                process.nextTick(() => this.emit('error', err));
-
-                return callback ? callback(err) : undefined;
-            }
+                this._sentry.captureException(metaError);
+            });
 
             this.emit('logged');
 
             if (callback) {
                 callback(null, true);
             }
-        });
+        } catch (error) {
+            process.nextTick(() => this.emit('error', error));
+
+            return callback ? callback(error) : undefined;
+        }
     }
 
     /**
@@ -77,17 +63,14 @@ class RavenTransport extends winston.Transport {
     static getOptions(configOptions) {
         const options = _.cloneDeep(configOptions);
 
-        options.name             = 'raven';
+        options.name             = 'sentry';
         options.handleExceptions = options.handleExceptions || false;
 
-        const raven = new Raven.Client(options.sentryDsn || undefined);
-
-        raven.install();
-
-        options.raven = raven;
+        options.sentry = Sentry;
+        options.sentry.init({ dsn: options.sentryDsn || undefined });
 
         return options;
     }
 }
 
-module.exports = RavenTransport;
+module.exports = SentryTransport;

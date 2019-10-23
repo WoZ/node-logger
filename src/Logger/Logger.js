@@ -3,7 +3,7 @@
 const winston = require('winston');
 
 const {
-    RavenTransport,
+    SentryTransport,
     ConsoleTransport,
     FileTransport,
     LogstashTransport
@@ -25,7 +25,7 @@ class Logger extends winston.Logger {
         const factories = new Map([
             ['console', ConsoleTransport],
             ['file', FileTransport],
-            ['raven', RavenTransport],
+            ['sentry', SentryTransport],
             ['logstash', LogstashTransport]
         ]);
 

@@ -15,9 +15,9 @@ All available transports and configuration options listed below:
         "level": "info",
         "filename": "./var/log/log"
     },
-    "raven": {
+    "sentry": {
         "level": "error",
-        "sentryDsn": ""
+        "dsn": ""
     },
     "logstash": {
         "level": "debug",
@@ -58,3 +58,11 @@ console.log(
     errorFormatter('some type', error)
 );
 ```
+
+## Migration from v2 to v3
+
+Rename configuration options:
+
+`logger.raven` to `logger.sentry`
+
+`logger.raven.sentryDsn` to `logger.sentry.dsn` 
