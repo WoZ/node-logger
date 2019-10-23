@@ -1,5 +1,9 @@
 ## Changelog
 
+### 3.0.0
+
+ [#27193](https://redmine.hwtool.net/issues/22508) Мігрували з модуля "raven" на "@sentry/node"
+
 ### 2.0.1
 
  [#22508](https://redmine.hwtool.net/issues/22508) Оновити модуль "dns-lookup-cache" до версії 1.0.3

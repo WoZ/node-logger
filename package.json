@@ -1,6 +1,6 @@
 {
   "name": "logger",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "description": "An implementation of logger with different transport systems",
   "main": "index.js",
   "engines": {
@@ -14,11 +14,11 @@
     "test:coverage": "NODE_ENV=test ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha --print both -- --opts tests/mocha.opts -R spec ./tests"
   },
   "dependencies": {
+    "@sentry/node": "^5.7.1",
     "clone": "2.1.1",
     "cycle": "1.0.3",
     "dns-lookup-cache": "1.0.3",
     "lodash": "4.17.4",
-    "raven": "2.0.2",
     "winston": "2.3.1",
     "winston-daily-rotate-file": "1.4.6"
   },
