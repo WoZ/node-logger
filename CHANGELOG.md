@@ -1,8 +1,12 @@
 ## Changelog
 
+### 3.0.1
+
+Update winston to 2.4.5 due to https://github.com/winstonjs/winston/pull/1800 
+
 ### 3.0.0
 
- [#27193](https://redmine.hwtool.net/issues/22508) Мігрували з модуля "raven" на "@sentry/node"
+ [#27193](https://redmine.hwtool.net/issues/27193) Мігрували з модуля "raven" на "@sentry/node"
 
 ### 2.0.1
 
@@ -17,4 +21,4 @@
 
 ### 1.0.0
 
-- [#19419](https://redmine.hwtool.net/issues/19419) Initial release
+ [#19419](https://redmine.hwtool.net/issues/19419) Initial release

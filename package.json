@@ -1,6 +1,6 @@
 {
   "name": "logger",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "An implementation of logger with different transport systems",
   "main": "index.js",
   "engines": {
@@ -19,7 +19,7 @@
     "cycle": "1.0.3",
     "dns-lookup-cache": "1.0.3",
     "lodash": "4.17.4",
-    "winston": "2.3.1",
+    "winston": "2.4.5",
     "winston-daily-rotate-file": "1.4.6"
   },
   "devDependencies": {
